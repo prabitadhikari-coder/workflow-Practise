@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+# 1. What events trigger the pipeline?
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# 2. What jobs should run?
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step A: Download the code from the repo onto the GitHub runner machine
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step B: Install the language runtime (Node.js example)
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # Step C: Install the project packages
+    - name: Install dependencies
+      run: npm install
+
+    # Step D: Run code tests/linters
+    - name: Run tests
+      run: npm test
+
+  deploy:
+    # Only deploy if the build-and-test job finishes successfully
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Deploy application
+      run: echo "Deploying your application to the server..."
