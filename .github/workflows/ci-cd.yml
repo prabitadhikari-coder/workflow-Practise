@@ -17,19 +17,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step B: Install the language runtime (Node.js example)
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
+    # Step B: Install the language runtime (Python project)
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        node-version: '20'
+        python-version: '3.14'
 
     # Step C: Install the project packages
     - name: Install dependencies
-      run: npm install
+      run: python -m pip install --upgrade pip
 
     # Step D: Run code tests/linters
     - name: Run tests
-      run: npm test
+      run: python -m unittest discover -v
 
   deploy:
     # Only deploy if the build-and-test job finishes successfully
